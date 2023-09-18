@@ -58,7 +58,7 @@ if __name__ == "__main__":
     video_paths = segment_video(contents, input_video)
     print("Paths: ", video_paths)
 
-    reel_paths = build_reel_format_videos(video_paths, title, author)
+    reel_paths = build_reel_format_videos(video_paths)
     print("Reel Paths: ", reel_paths)
 
     print(f"Result ended in {time.time() - time_start} seconds")
