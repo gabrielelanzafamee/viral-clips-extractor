@@ -1,0 +1,5 @@
+pytube
+opencv-python
+openai
+youtube-transcript-api
+moviepy @ git+https://github.com/Zulko/moviepy@bc8d1a831d2d1f61abfdf1779e8df95d523947a5
