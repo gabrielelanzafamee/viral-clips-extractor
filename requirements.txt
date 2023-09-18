@@ -1,5 +1,8 @@
-pytube
-opencv-python
-openai
-youtube-transcript-api
+whisper-timestamped @ git+https://github.com/linto-ai/whisper-timestamped@127e8b738756420487210490d09938593244b3dd
+face-recognition @ git+https://github.com/ageitgey/face_recognition@2e2dccea9dd0ce730c8d464d0f67c6eebb40c9d1
 moviepy @ git+https://github.com/Zulko/moviepy@bc8d1a831d2d1f61abfdf1779e8df95d523947a5
+mediapipe
+openai
+opencv-python
+youtube-transcript-api
+pytube

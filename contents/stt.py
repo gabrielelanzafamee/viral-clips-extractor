@@ -63,36 +63,9 @@ class STT:
 
         return chunks
     
-    # also include laught check and other sentiments
-
     @staticmethod
     def calc_chunks_size(duration):
-        # return int((duration / 60) / 15)
-    
-        if duration < 900: # 15 min
-            return 1
-        
-        if duration < 1800: # 30 min
-            return 2
-        
-        if duration < 2700: # 45 min
-            return 3
-        
-        if duration < 3600: # 1h
-            return 4
-        
-        if duration < 4500: # 1h 15 min
-            return 5
-        
-        if duration < 5400: # 1h 30 min
-            return 6
-        
-        if duration < 6900: # 1h 45 min
-            return 7
-        
-        if duration < 7200: # 2h
-            return 8
-
+        return int((duration / 60) / 15)
 
     def __call_whisper__(self, audio_path):
         print(f'\nLoading audio {audio_path}...')
