@@ -11,7 +11,7 @@ from contents.stt import STT
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='python clips_extractor.py', description='Viral Clips Extractor - Extract the most viral clips from a youtube video', epilog='')
-    parser.add_argument('-u', '--url')
+    parser.add_argument('-u', '--url', help="Url of the video where to extract the clips")
     args = parser.parse_args()
 
     time_start = time.time()

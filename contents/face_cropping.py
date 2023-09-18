@@ -1,13 +1,12 @@
 import cv2
 import time
-
 import numpy as np
-import mediapipe as mp
 import moviepy.editor as mpe
 
-face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
 def crop_video(input_video, output_video, size=(720, 1280)):
+    face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
+
     global current_face
     global current_face_start_time
     global last_frame

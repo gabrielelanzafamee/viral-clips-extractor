@@ -65,7 +65,7 @@ class STT:
     
     @staticmethod
     def calc_chunks_size(duration):
-        return int((duration / 60) / 15)
+        return max(1, int((duration / 60) / 15))
 
     def __call_whisper__(self, audio_path):
         print(f'\nLoading audio {audio_path}...')
