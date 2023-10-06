@@ -6,3 +6,8 @@ openai
 opencv-python
 youtube-transcript-api
 pytube
+pytesseract
+pydub
+SpeechRecognition
+deepface
+pathos

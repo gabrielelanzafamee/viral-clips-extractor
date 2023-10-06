@@ -35,23 +35,15 @@ if __name__ == "__main__":
     size = STT.calc_chunks_size(audio_duration)
     chunk_size = int(len(data) / size)
     contents = []
+    chunks = [(transcript.split("\n")[i:i+size], analyze_transcript(transcript.split("\n")[i:i+size])) for i in range(0, len(transcript.split("\n")), size)]
 
-    print(f"\nChunking the transcript...")
-    print(f"Single Chunk Size: {chunk_size}")
-    print(f"Item x Chunk: {size}\n")
-
-    for _ in range(0, size):
-        chunk = "\n".join(transcript.split("\n")[start:start+chunk_size])
-        interesting_segment = analyze_transcript(chunk)
-
+    for (transcript_data, interesting_segment) in chunks:
         try:
             contents_chunk = json.loads(interesting_segment["content"])
-            print(contents_chunk)
             contents += contents_chunk
-        except:
-            print(interesting_segment["content"])
-        
-        start += chunk_size
+        except Exception as e:
+            print(f"Exception: {e}")
+            continue
 
     print(contents)
 

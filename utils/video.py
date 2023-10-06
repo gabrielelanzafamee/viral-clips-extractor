@@ -8,7 +8,8 @@ from contents.face_cropping import crop_video
 
 from utils.common import generate_random_string
 
-def gen_subtitles(transcript, width, height):
+
+def gen_subtitles(transcript: list, _width: int, height: int):
     clips = []
 
     for (text, start_times, end_times) in transcript:
@@ -35,7 +36,8 @@ def gen_subtitles(transcript, width, height):
 
     return clips
 
-def segment_video(response, path) -> list[str]:
+
+def segment_video(response: list, path: str) -> list[str]:
     paths = []
 
     for segment in response :
@@ -72,10 +74,10 @@ def build_reel_format_videos(video_paths: list[str]) -> list[str]:
         for i in range(0, len(data['segments']), 5):
             segments = data['segments'][i:i+5]
             for segment in segments:
-                    words = ' '.join([x['text'] for x in segment['words']])
-                    words_start_times = [x['start'] for x in segment['words']]
-                    words_end_times = [x['end'] for x in segment['words']]
-                    subtitles_points.append((words, words_start_times, words_end_times))
+                words = ' '.join([x['text'] for x in segment['words']])
+                words_start_times = [x['start'] for x in segment['words']]
+                words_end_times = [x['end'] for x in segment['words']]
+                subtitles_points.append((words, words_start_times, words_end_times))
 
         subtitles = gen_subtitles(subtitles_points, w, h)
 
