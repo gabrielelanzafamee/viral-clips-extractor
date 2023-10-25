@@ -41,7 +41,9 @@ To run the YouTube Clips Extractor, you'll need the following:
    openai.api_key = '<your-token>'
    ```
 
-5. Run the application:
+5. Export cookies from tiktok.com using "Get cookies.txt LOCALLY" and save it in the root of the project as `cookies.txt`
+
+6. Run the application:
 
    ```shell
    python clips_extractor.py --url <url>

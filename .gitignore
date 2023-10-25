@@ -3,3 +3,4 @@ models/
 out/
 tmp/
 *.pyc
+cookies.txt

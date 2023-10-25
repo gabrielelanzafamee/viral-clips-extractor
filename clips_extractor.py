@@ -1,13 +1,15 @@
 import json
 import time
+import random
 import argparse
 
-from utils.video import segment_video, build_reel_format_videos
-from utils.common import generate_random_string
-from utils.youtube import get_video
+from core.utils.video import segment_video, build_reel_format_videos
+from core.utils.common import generate_random_string
+from core.utils.youtube import get_video
+from core.utils.tiktok import Tiktok
 
-from contents.chatgpt import analyze_transcript
-from contents.stt import STT
+from core.contents.chatgpt import analyze_transcript
+from core.contents.stt import STT
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='python clips_extractor.py', description='Viral Clips Extractor - Extract the most viral clips from a youtube video', epilog='')
@@ -37,6 +39,12 @@ if __name__ == "__main__":
     contents = []
     chunks = [(transcript.split("\n")[i:i+size], analyze_transcript(transcript.split("\n")[i:i+size])) for i in range(0, len(transcript.split("\n")), size)]
 
+    print("Transcript analysis")
+    print(size)
+    print(chunk_size)
+    print(contents)
+    print(chunks)
+
     for (transcript_data, interesting_segment) in chunks:
         try:
             contents_chunk = json.loads(interesting_segment["content"])
@@ -50,7 +58,15 @@ if __name__ == "__main__":
     video_paths = segment_video(contents, input_video)
     print("Paths: ", video_paths)
 
-    reel_paths = build_reel_format_videos(video_paths)
+    reel_paths = build_reel_format_videos(video_paths, crop=False)
     print("Reel Paths: ", reel_paths)
+
+    # upload only the longest video and the top 3 videos by duration
+
+    for video in reel_paths:
+        print(f"Uploading video {video}")
+        video_id = Tiktok.upload([video, "#fyp #ai #random"])
+        print(f"Video uploaded with id {video_id}")
+        time.sleep(random.randint(10, 20)) # Sleep between 10 and 20 seconds
 
     print(f"Result ended in {time.time() - time_start} seconds")
