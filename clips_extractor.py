@@ -1,9 +1,12 @@
 import json
 import time
+import math
 import random
 import argparse
 
-from core.utils.video import segment_video, build_reel_format_videos
+import moviepy.editor as mpe
+
+from core.utils.video import segment_video, build_reel_format_videos, get_top_longest_videos
 from core.utils.common import generate_random_string
 from core.utils.youtube import get_video
 from core.utils.tiktok import Tiktok
@@ -19,6 +22,7 @@ if __name__ == "__main__":
     time_start = time.time()
 
     video_url = args.url
+    #https://www.youtube.com/watch?v=7QSb4rs_s1s&ab_channel=WeirdHistoryFood
     input_video = f"tmp/{generate_random_string(16)}.mp4"
 
     video_id, title, author = get_video(video_url, input_video)
@@ -33,16 +37,20 @@ if __name__ == "__main__":
     with open(transcript_out, "w") as f:
         print(transcript, file=f)
 
-    start = 0
-    size = STT.calc_chunks_size(audio_duration)
-    chunk_size = int(len(data) / size)
+    transcript = transcript.split("\n")
+    split = 2
+    chunk_size = math.floor(len(transcript) / split)
+    chunks = []
     contents = []
-    chunks = [(transcript.split("\n")[i:i+size], analyze_transcript(transcript.split("\n")[i:i+size])) for i in range(0, len(transcript.split("\n")), size)]
 
-    print("Transcript analysis")
-    print(size)
-    print(chunk_size)
-    print(contents)
+    print(f"\nChunking the audio...")
+    print(f"Single Chunk Size: {chunk_size}")
+    print(f"Split: {split}\n")
+
+    for i in range(0, len(transcript), chunk_size):
+        print(transcript[i:i+chunk_size])
+        chunks.append((transcript[i:i+chunk_size], analyze_transcript(transcript[i:i+chunk_size])))
+
     print(chunks)
 
     for (transcript_data, interesting_segment) in chunks:
@@ -62,8 +70,7 @@ if __name__ == "__main__":
     print("Reel Paths: ", reel_paths)
 
     # upload only the longest video and the top 3 videos by duration
-
-    for video in reel_paths:
+    for video, video_duration in get_top_longest_videos(reel_paths, 4):
         print(f"Uploading video {video}")
         video_id = Tiktok.upload([video, "#fyp #ai #random"])
         print(f"Video uploaded with id {video_id}")

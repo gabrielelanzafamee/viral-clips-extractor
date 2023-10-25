@@ -30,7 +30,7 @@ def gen_subtitles(transcript: list, _width: int, height: int):
         t_item = t_item.resize(0.16)
         t_item = t_item.with_start(start_times[0])
         t_item = t_item.with_end(end_times[-1])
-        t_item = t_item.with_position((20, height - 250))
+        t_item = t_item.with_position((75, height - 300))
 
         clips.append(t_item)
 
@@ -103,3 +103,28 @@ def build_reel_format_videos(video_paths: list[str], crop: bool = True) -> list[
         paths.append(output_file)
 
     return paths
+
+
+def get_top_longest_videos(paths, n_items=3):
+    if not paths:
+        return []
+
+    videos = []
+
+    for path in paths:
+        try:
+            video = mpe.VideoFileClip(path)
+            duration = video.duration
+            videos.append((path, duration))
+            video.close()
+        except Exception as e:
+            print(f"Error processing video '{path}': {str(e)}")
+            return []
+
+    # Sort videos by duration in descending order
+    videos.sort(key=lambda x: x[1], reverse=True)
+
+    # Get the top n longest videos
+    top_n_videos = videos[:n_items]
+
+    return top_n_videos
