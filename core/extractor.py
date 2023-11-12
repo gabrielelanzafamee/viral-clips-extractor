@@ -12,18 +12,21 @@ response_obj='''[
 ]'''
 
 def analyze_transcript(transcript: str):
-    transcript: list = transcript.split("\n")
-    chunks = []
-    contents = []
+    data: list = transcript.split("\n")
+    chunks: list[tuple] = []
+    contents: list = []
+    content: str = ""
 
+    print(data)
     print(f"\nChunking the transcript...")
 
     # chunk the transcript in multiple parts of a max of 3000 characters
-    content = ""
-    while len(transcript) > 0:
-        while len(content) < 3000:
-            content += transcript.pop(0)
-        chunks.append((content, completion(content)))
+    for i in range(0, len(data)):
+        print("Processing chunk: ", data[i])
+        content += data[i] + "\n"
+        if len(content) > 3000:
+            chunks.append((content, completion(content)))
+            content = ""
 
     print(chunks)
 

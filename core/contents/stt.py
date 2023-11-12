@@ -70,7 +70,8 @@ class STT:
     def __call_whisper__(self, audio_path):
         print(f'\nLoading audio {audio_path}...')
         audio = whisper.load_audio(audio_path)
-        model = whisper.load_model("base.en", device="cuda:0")
+        model = whisper.load_model("base.en", device="cpu")
+        # model = whisper.load_model("base.en", device="cuda:0")
         transcript = whisper.transcribe(model, audio, language="en", verbose=False)
         return transcript
 

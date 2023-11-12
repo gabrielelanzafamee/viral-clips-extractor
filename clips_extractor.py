@@ -17,7 +17,6 @@ if __name__ == "__main__":
     time_start = time.time()
 
     video_url = args.url
-    #https://www.youtube.com/watch?v=7QSb4rs_s1s&ab_channel=WeirdHistoryFood
     input_video = f"tmp/{generate_random_string(16)}.mp4"
 
     video_id, title, author = get_video(video_url, input_video)
