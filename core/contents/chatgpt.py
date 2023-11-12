@@ -10,7 +10,7 @@ response_obj='''[
   },
 ]'''
 
-def analyze_transcript(transcript):
+def completion(transcript):
     prompt = f"This is a transcript of a video. Please identify the most interesing sections from the whole, make sure that the duration is more than 2 minutes (it MUST to be more than 120 seconds), Make Sure you provide extremely accurate timestamps and respond only in this JSON format {response_obj}  \n Here is the Transcription:\n{transcript}"
 
     response = openai.ChatCompletion.create(

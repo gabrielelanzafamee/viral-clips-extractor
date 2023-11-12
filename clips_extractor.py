@@ -1,18 +1,13 @@
-import json
 import time
-import math
 import random
 import argparse
-
-import moviepy.editor as mpe
 
 from core.utils.video import segment_video, build_reel_format_videos, get_top_longest_videos
 from core.utils.common import generate_random_string
 from core.utils.youtube import get_video
 from core.utils.tiktok import Tiktok
-
-from core.contents.chatgpt import analyze_transcript
 from core.contents.stt import STT
+from core.extractor import analyze_transcript
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='python clips_extractor.py', description='Viral Clips Extractor - Extract the most viral clips from a youtube video', epilog='')
@@ -37,31 +32,8 @@ if __name__ == "__main__":
     with open(transcript_out, "w") as f:
         print(transcript, file=f)
 
-    transcript = transcript.split("\n")
-    split = 2
-    chunk_size = math.floor(len(transcript) / split)
-    chunks = []
-    contents = []
-
-    print(f"\nChunking the audio...")
-    print(f"Single Chunk Size: {chunk_size}")
-    print(f"Split: {split}\n")
-
-    for i in range(0, len(transcript), chunk_size):
-        print(transcript[i:i+chunk_size])
-        chunks.append((transcript[i:i+chunk_size], analyze_transcript(transcript[i:i+chunk_size])))
-
-    print(chunks)
-
-    for (transcript_data, interesting_segment) in chunks:
-        try:
-            contents_chunk = json.loads(interesting_segment["content"])
-            contents += contents_chunk
-        except Exception as e:
-            print(f"Exception: {e}")
-            continue
-
-    print(contents)
+    contents = analyze_transcript(transcript)
+    print("Contents: ", contents)
 
     video_paths = segment_video(contents, input_video)
     print("Paths: ", video_paths)
