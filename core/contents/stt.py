@@ -1,3 +1,4 @@
+import torch
 import librosa
 
 import moviepy.editor as mpe
@@ -7,6 +8,7 @@ from core.utils.common import generate_random_string
 
 class STT:
     def __init__(self):
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.duration = 0 # save the duration for keep the timing during the merge
 
     def get_transcript(self, video_path: str) -> list[tuple[str, float, float]]:
@@ -70,8 +72,7 @@ class STT:
     def __call_whisper__(self, audio_path):
         print(f'\nLoading audio {audio_path}...')
         audio = whisper.load_audio(audio_path)
-        model = whisper.load_model("base.en", device="cpu")
-        # model = whisper.load_model("base.en", device="cuda:0")
+        model = whisper.load_model("base.en", device=self.device)
         transcript = whisper.transcribe(model, audio, language="en", verbose=False)
         return transcript
 

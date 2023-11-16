@@ -1,5 +1,5 @@
 from tiktok_uploader.upload import upload_video
-
+from core.config import COOKIES_TIKTOK_PATH
 
 class Tiktok:
     @staticmethod
@@ -9,4 +9,4 @@ class Tiktok:
             Video item format: [path, description]
             return: list of video ids
         """
-        return upload_video(filename=video[0], description=video[1], cookies="cookies.txt")
+        return upload_video(filename=video[0], description=video[1], cookies=COOKIES_TIKTOK_PATH)

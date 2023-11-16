@@ -12,3 +12,4 @@ pydub
 SpeechRecognition
 deepface
 pathos
+librosa

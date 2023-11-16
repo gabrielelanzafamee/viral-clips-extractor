@@ -22,20 +22,21 @@ def analyze_transcript(transcript: str):
 
     # chunk the transcript in multiple parts of a max of 3000 characters
     for i in range(0, len(data)):
-        print("Processing chunk: ", data[i])
         content += data[i] + "\n"
         if len(content) > 3000:
+            print("Processing content: ", content)
             chunks.append((content, completion(content)))
             content = ""
 
     print(chunks)
 
     for (transcript_data, interesting_segment) in chunks:
+        print(transcript_data, interesting_segment)
         try:
-            contents_chunk = json.loads(interesting_segment["content"])
+            contents_chunk = json.loads(interesting_segment)
             contents += contents_chunk
         except Exception as e:
-            print(f"Exception: {e}")
+            print(f"Ignored Exception: {e}")
             continue
-
+        
     return contents

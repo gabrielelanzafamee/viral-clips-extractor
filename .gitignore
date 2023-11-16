@@ -4,3 +4,5 @@ out/
 tmp/
 *.pyc
 cookies.txt
+.env
+__pycache__/
