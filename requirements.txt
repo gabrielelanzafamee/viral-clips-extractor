@@ -13,3 +13,4 @@ SpeechRecognition
 deepface
 pathos
 librosa
+tiktoken

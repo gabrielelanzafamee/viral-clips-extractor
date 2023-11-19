@@ -1,6 +1,5 @@
 import os
 import math
-import subprocess
 import moviepy.editor as mpe
 
 from core.contents.stt import STT
@@ -16,7 +15,7 @@ def gen_subtitles(transcript: list, _width: int, height: int):
         t_item = mpe.TextClip(
             text,
             color='#fff',
-            align="West",
+            align="center",
             stroke_width=2 * 6,
             stroke_color='#000',
             font_size=36 * 6,
@@ -24,13 +23,13 @@ def gen_subtitles(transcript: list, _width: int, height: int):
             font='Arial-Black',
             kerning=3,
             method="caption",
-            size=(680 * 6, '')
+            size=(700 * 6, '')
         )
 
         t_item = t_item.resize(0.16)
         t_item = t_item.with_start(start_times[0])
         t_item = t_item.with_end(end_times[-1])
-        t_item = t_item.with_position((75, height - 300))
+        t_item = t_item.with_position(('center', height - 300))
 
         clips.append(t_item)
 

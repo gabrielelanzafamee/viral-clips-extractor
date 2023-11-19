@@ -35,10 +35,10 @@ To run the YouTube Clips Extractor, you'll need the following:
 
 3. Sign up for ChatGPT 3.5 and obtain your API credentials.
 
-4. Configure the API credentials for ChatGPT 3.5 by update the variable `openai.api_key` in `contents/chatgpt.py` file in the project directory.
+4. Configure the API credentials for ChatGPT 3.5 by create and `.env` file in the project directory.
 
    ```python
-   openai.api_key = '<your-token>'
+   OPENAI_TOKEN="<your-token>"
    ```
 
 5. Export cookies from tiktok.com using "Get cookies.txt LOCALLY" and save it in the root of the project as `cookies.txt`

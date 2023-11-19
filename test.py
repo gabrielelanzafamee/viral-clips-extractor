@@ -1,12 +1,69 @@
-import random
-import time
-from core.utils.tiktok import Tiktok
-from core.utils.video import get_top_longest_videos
+""" improving the transcript analysis and clips extraction """
 
-tt = Tiktok()
-paths = ['out/no_crop_0_7dA3633e73baEdBC.mp4', 'out/no_crop_1_86AEC0B31A6EEB54.mp4', 'out/no_crop_2_0554BB1f4E754Baa.mp4', 'out/no_crop_3_1Af2Fe15F1A39660.mp4', 'out/no_crop_4_01Be862afBdB34A0.mp4', 'out/no_crop_5_fcd4b9ECC37C53bC.mp4', 'out/no_crop_6_eE1B72074Ce0Ff7d.mp4', 'out/no_crop_7_9Bfb9C6dc95B8AB6.mp4', 'out/no_crop_8_FcE733F8F9F7d472.mp4', 'out/no_crop_9_aC8b1af0EcDDe6dd.mp4', 'out/no_crop_10_B3fc10f4e3DF2D8E.mp4']
-for video, video_duration in get_top_longest_videos(paths, 4):
-    print(f"Uploading video {video}")
-    video_id = Tiktok.upload([video, "#fyp #ai #random"])
-    print(f"Video uploaded with id {video_id}")
-    time.sleep(random.randint(10, 20)) # Sleep between 10 and 20 seconds
+import re
+import tiktoken
+
+from core.contents.stt import STT
+from core.utils.youtube import get_video
+from core.utils.common import generate_random_string
+from core.contents.chatgpt import completion
+
+# video_url = "https://www.youtube.com/watch?v=bympMYTNS1s&ab_channel=NDL"
+# input_video = f"tmp/{generate_random_string(16)}.mp4"
+
+# video_id, title, author = get_video(video_url, input_video)
+# print(video_id, title, author)
+
+# # improving transcript extraction
+# transcript = STT().get_transcript(input_video).get('transcript')
+transcript = open("transcript.txt", "r").read()
+
+idx = 0
+tokens = 0
+content = ""
+transcript_iter = iter(transcript.split("\n"))
+while line := next(transcript_iter, -1):
+    if line == -1:
+        break
+
+    match = re.match(r"Text:\s+(.+)\sTimestamp:\s(.+)\s-\s(.+)", line)
+    if match == None: continue
+
+    text = match.group(1)
+    timestamp_start = match.group(2)
+    timestamp_end = match.group(3)
+
+    print(f"Content: {text}")
+    print(f"Timestamp Start: {timestamp_start}")
+    print(f"Timestamp End: {timestamp_end}\n")
+
+    if idx > 0 and text.lower() != re.match(r"Text:\s+(.+)\sTimestamp:\s(.+)\s-\s(.+)", transcript.split("\n")[idx-1]).group(1).lower():
+        c = f"Text: {text} Timestamp: {timestamp_start} - {timestamp_end}\n"
+        content += c
+        tokens += len(tiktoken.encoding_for_model("gpt-3.5-turbo").encode(c))
+
+
+    print("Total token: ", tokens)
+    if tokens > 3500:
+        open(f"transcript_{idx}.json", "w").write(completion(content))
+        content = ""
+        tokens = 0
+
+    idx += 1
+
+open("transcript.cleaned.txt", "w").write(content)
+
+# now we should get more info about the transcript like
+#  - the type of video
+#  - the context of the video
+#  - the topic of the video
+
+# after that we should summarize and remove the parts useless of the transcript
+#  - remove the parts where the speaker is not talking
+#  - remove the parts where the speaker is talking but is not saying anything important
+#  - remove the parts where the speaker is talking but is saying something not related to the video
+
+# after all these considerations we can know create multiple prompt for different type of
+# type, context and topic of the transcript and choose the correct duration and parts to extract
+
+# some prompts could be like:
