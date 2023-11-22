@@ -16,17 +16,17 @@ def gen_subtitles(transcript: list, _width: int, height: int):
             text,
             color='#fff',
             align="center",
-            stroke_width=2 * 6,
+            stroke_width=2 * 4,
             stroke_color='#000',
-            font_size=36 * 6,
+            font_size=36 * 4,
             interline=0,
-            font='Arial-Black',
+            font='DejaVuSans-Bold',
             kerning=3,
-            method="caption",
-            size=(700 * 6, '')
+            method="",
+            size=(700 * 4, '')
         )
 
-        t_item = t_item.resize(0.16)
+        t_item = t_item.resize(0.25)
         t_item = t_item.with_start(start_times[0])
         t_item = t_item.with_end(end_times[-1])
         t_item = t_item.with_position(('center', height - 300))
@@ -73,8 +73,9 @@ def build_reel_format_videos(video_paths: list[str], crop: bool = True) -> list[
         audio.write_audiofile(tmp_audio)
         data = STT().__call_whisper__(tmp_audio)
         subtitles_points = []
-        for i in range(0, len(data['segments']), 5):
-            segments = data['segments'][i:i+5]
+
+        for i in range(0, len(data['segments']), 2):
+            segments = data['segments'][i:i+2]
             for segment in segments:
                 words = ' '.join([x['text'] for x in segment['words']])
                 words_start_times = [x['start'] for x in segment['words']]

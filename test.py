@@ -1,12 +1,13 @@
 """ improving the transcript analysis and clips extraction """
 
 import re
+import json
 import tiktoken
 
 from core.contents.stt import STT
 from core.utils.youtube import get_video
 from core.utils.common import generate_random_string
-from core.contents.chatgpt import completion
+from core.contents.chatgpt import extract_clips
 
 # video_url = "https://www.youtube.com/watch?v=bympMYTNS1s&ab_channel=NDL"
 # input_video = f"tmp/{generate_random_string(16)}.mp4"
@@ -16,12 +17,14 @@ from core.contents.chatgpt import completion
 
 # # improving transcript extraction
 # transcript = STT().get_transcript(input_video).get('transcript')
-transcript = open("transcript.txt", "r").read()
+transcript = open("files/transcript.txt", "r").read()
 
 idx = 0
 tokens = 0
 content = ""
 transcript_iter = iter(transcript.split("\n"))
+clips = []
+
 while line := next(transcript_iter, -1):
     if line == -1:
         break
@@ -42,16 +45,17 @@ while line := next(transcript_iter, -1):
         content += c
         tokens += len(tiktoken.encoding_for_model("gpt-3.5-turbo").encode(c))
 
-
     print("Total token: ", tokens)
     if tokens > 3500:
-        open(f"transcript_{idx}.json", "w").write(completion(content))
+        try:
+            clips += json.loads(extract_clips(content))
+        except Exception as e:
+            print("Error while extracting clips from transcript: ", e)
+
         content = ""
         tokens = 0
 
     idx += 1
-
-open("transcript.cleaned.txt", "w").write(content)
 
 # now we should get more info about the transcript like
 #  - the type of video

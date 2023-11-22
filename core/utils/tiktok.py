@@ -9,4 +9,4 @@ class Tiktok:
             Video item format: [path, description]
             return: list of video ids
         """
-        return upload_video(filename=video[0], description=video[1], cookies=COOKIES_TIKTOK_PATH)
+        return upload_video(filename=video[0], description=video[1], cookies=COOKIES_TIKTOK_PATH, headless=True)

@@ -1,23 +1,16 @@
-import os
 import time
 import random
-import argparse
 
 from core.utils.video import segment_video, build_reel_format_videos, get_top_longest_videos
-from core.utils.common import generate_random_string, try_catch
+from core.utils.common import generate_random_string
 from core.utils.youtube import get_video
 from core.utils.tiktok import Tiktok
 from core.contents.stt import STT
 from core.extractor import analyze_transcript
 
-parser = argparse.ArgumentParser(prog='python clips_extractor.py', description='Viral Clips Extractor - Extract the most viral clips from a youtube video', epilog='')
-parser.add_argument('-u', '--url', help="Url of the video where to extract the clips")
-args = parser.parse_args()
-
-def main():
+def generate_video(video_url):
     time_start = time.time()
 
-    video_url = args.url
     input_video = f"tmp/{generate_random_string(16)}.mp4"
 
     video_id, title, author = get_video(video_url, input_video)
@@ -49,9 +42,3 @@ def main():
         time.sleep(random.randint(10, 20)) # Sleep between 10 and 20 seconds
 
     print(f"Result ended in {time.time() - time_start} seconds")
-
-if __name__ == "__main__":
-    try_catch(main)
-    print("Removing tmp files...")
-    for f in os.listdir("tmp"):
-        try_catch(os.remove, f"tmp/{f}")
